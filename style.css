@@ -1,0 +1,138 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: #0d0f14;
+  color: #fff;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* 3D-сцена приклеена к экрану, страница под ней просто прокручивается */
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Длина прокрутки = длина «прогулки» по квартире */
+#scroll-space { height: 700vh; }
+
+/* ---------- Экран загрузки ---------- */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #0d0f14;
+  transition: opacity 0.8s ease;
+}
+#loader.done { opacity: 0; pointer-events: none; }
+.loader-title { font-size: 28px; font-weight: 600; letter-spacing: 0.5px; }
+.loader-bar { width: min(360px, 70vw); height: 4px; background: #262a35; border-radius: 4px; overflow: hidden; }
+#loader-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #7b5cff, #c34bff); transition: width 0.2s; }
+#loader-text { font-size: 14px; color: #8b92a5; }
+
+/* ---------- Подсказка ---------- */
+#hint {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background: rgba(13, 15, 20, 0.6);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  font-size: 14px;
+  color: #d5d9e6;
+  z-index: 10;
+  transition: opacity 0.5s;
+}
+#hint.hidden { opacity: 0; }
+
+/* ---------- Метки устройств ---------- */
+#hotspots { position: fixed; inset: 0; pointer-events: none; z-index: 20; }
+
+.hotspot {
+  position: absolute;
+  left: 0; top: 0;
+  width: 34px; height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: rgba(123, 92, 255, 0.85);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  pointer-events: auto;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 0 rgba(123, 92, 255, 0.7);
+  animation: pulse 2s infinite;
+  transition: opacity 0.25s ease;   /* плавное появление/затухание при смене комнаты (см. HOTSPOT_FADE_MS в main.js) */
+}
+.hotspot.on { background: rgba(255, 196, 61, 0.95); animation: none; box-shadow: 0 0 18px rgba(255, 196, 61, 0.8); }
+.hotspot.hidden { display: none; }
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(123, 92, 255, 0.7); }
+  70%  { box-shadow: 0 0 0 16px rgba(123, 92, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(123, 92, 255, 0); }
+}
+
+/* ---------- Карточка устройства ---------- */
+#card {
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(340px, calc(100vw - 48px));
+  padding: 24px;
+  background: rgba(20, 23, 32, 0.82);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  z-index: 30;
+  transition: opacity 0.3s, transform 0.3s;
+}
+#card.hidden { opacity: 0; pointer-events: none; transform: translateY(-50%) translateX(20px); }
+#card h2 { font-size: 22px; margin-bottom: 10px; }
+#card p { font-size: 15px; line-height: 1.5; color: #c4c9d8; margin-bottom: 18px; }
+#card-close {
+  position: absolute; top: 10px; right: 14px;
+  background: none; border: none; color: #8b92a5; font-size: 26px; cursor: pointer;
+}
+#card-toggle {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #7b5cff, #c34bff);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+#card-toggle.on { background: linear-gradient(90deg, #ffb52e, #ff8a3d); }
+
+/* Кнопка-ссылка «Купить» под переключателем: контурная, в фиолетовой гамме сайта, чтобы не спорить с основной кнопкой */
+.card-buy {
+  display: block;
+  margin-top: 10px;
+  padding: 11px 12px;
+  box-sizing: border-box;
+  border: 1.5px solid #7b5cff;
+  border-radius: 12px;
+  background: rgba(123, 92, 255, 0.16);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.card-buy[hidden] { display: none; }
+.card-buy:hover, .card-buy:focus-visible { background: rgba(195, 75, 255, 0.34); border-color: #c34bff; outline: none; }

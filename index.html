@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Умный дом с Алисой</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Three.js подключаем из интернета, ставить ничего не нужно -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Экран загрузки (модель тяжёлая, поэтому нужен прогресс) -->
+  <div id="loader">
+    <div class="loader-title">Умный дом с Алисой</div>
+    <div class="loader-bar"><div id="loader-fill"></div></div>
+    <div id="loader-text">Загружаем квартиру… 0%</div>
+  </div>
+
+  <!-- 3D-сцена на весь экран -->
+  <canvas id="scene"></canvas>
+
+  <!-- Контейнер для меток устройств (создаются из main.js) -->
+  <div id="hotspots"></div>
+
+  <!-- Подсказка -->
+  <div id="hint">Листай колёсиком, чтобы пройтись по квартире ↓</div>
+
+  <!-- Карточка устройства -->
+  <div id="card" class="hidden">
+    <button id="card-close" aria-label="Закрыть">×</button>
+    <h2 id="card-title"></h2>
+    <p id="card-text"></p>
+    <button id="card-toggle">Включить</button>
+    <!-- Ссылка на пост в Телеграм-канале; адрес берётся из buyUrl устройства (main.js), без адреса кнопка скрыта -->
+    <a id="card-buy" class="card-buy" href="#" target="_blank" rel="noopener noreferrer" hidden>Купить <span aria-hidden="true">↗</span></a>
+  </div>
+
+  <!-- Невидимый блок, который создаёт длину страницы для прокрутки -->
+  <div id="scroll-space"></div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
